@@ -1,0 +1,12 @@
+{
+  "name": "gymstation",
+  "displayName": "gymstation",
+  "expo": {
+    "name": "gymstation",
+    "slug": "gymstation",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
