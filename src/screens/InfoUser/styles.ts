@@ -1,11 +1,10 @@
 import styled from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import {Keyboard} from 'react-native';
 
 export const Container = styled.View`
+	height: 100%;
 	background-color: ${({ theme }) => theme.colors.background};
 	justify-content: space-between;
-	height: 100%;
 `;
 
 export const TitleContent = styled.Text`
@@ -17,7 +16,7 @@ export const TitleContent = styled.Text`
 export const Content = styled.View`
 	justify-content: space-between;
 	margin: 24px;
-	padding: 46px 24px;
+	padding: 24px 24px;
 	background-color: ${({ theme }) => theme.colors.shape};
 
 `;

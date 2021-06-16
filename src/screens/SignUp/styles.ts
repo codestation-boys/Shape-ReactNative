@@ -1,6 +1,5 @@
 import styled from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import {Keyboard} from 'react-native';
 
 export const Container = styled.View`
 	background-color: ${({ theme }) => theme.colors.background};
@@ -17,11 +16,11 @@ export const TitleContent = styled.Text`
 export const Content = styled.View`
 	justify-content: space-between;
 	margin: 24px;
-	padding: 46px 24px;
+	padding: 24px 24px;
 	background-color: ${({ theme }) => theme.colors.shape};
 
 `;
-export const Form = styled.View`
+export const Form = styled.ScrollView`
 
 `;
 
@@ -40,5 +39,12 @@ export const TitleFooter = styled.Text`
 export const WrapperFooter = styled.View`
 	flex-direction: row;
 	align-items: center;
+	justify-content: space-between;
+`;
+
+export const WrapperButtons = styled.View`
+	flex-direction: row;
+	width: 100%;
+	padding: 8px 0 ;
 	justify-content: space-between;
 `;
