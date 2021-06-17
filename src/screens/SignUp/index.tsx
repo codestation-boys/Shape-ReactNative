@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTheme } from 'styled-components';
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../../hooks/auth';
 
 import {
 	KeyboardAvoidingView,
@@ -14,7 +15,6 @@ import { PasswordInput } from '../../components/PasswordInput';
 import { ButtonType } from '../../components/ButtonType';
 import { Button } from '../../components/Button';
 import { SigninSocialButton } from '../../components/SigninSocialButton';
-import { Header } from '../../components/Header';
 
 import {
 	Container,
@@ -23,12 +23,15 @@ import {
 	TitleContent,
 	Footer,
 	WrapperFooter,
-	WrapperButtons
+	WrapperButtons,
+	BackgroundImage
 } from './styles';
 
 import AppleSvg from '../../assets/apple_icon.svg';
+import GitHubSvg from '../../assets/github.svg';
 import GoogleSvg from '../../assets/google_icon.svg';
-import { useAuth } from '../../hooks/auth';
+import Background from '../../assets/bg-login.png';
+
 
 
 export function SignUp(){
@@ -60,13 +63,13 @@ export function SignUp(){
 		navigation.goBack();
 	}
 	return (
-		<KeyboardAvoidingView behavior="position" enabled >
-			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+		<KeyboardAvoidingView behavior="position" enabled={Platform.OS==='ios' ? true : false}  >
+			{/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
 				<Container>
-					<Header />
+				<BackgroundImage source={Background} resizeMode="cover"/>
 					<Content>
 						<TitleContent>
-							Se cadastrar
+							Faça seu cadastro para começar!
 						</TitleContent>
 						<Form>
 							<Input
@@ -129,33 +132,31 @@ export function SignUp(){
 							/>
 						</Form>
 						<WrapperFooter>
-								<Button
+								{/* <Button
 									title=""
-									color={theme.colors.shape}
+									color={theme.colors.text_light}
 									onPress={handleSignIn}
 									enabled={true}
 									loading={false}
 									iconName="chevron-double-left"
-								/>
+									light
+								/> */}
 								<SigninSocialButton
 									title="Login Google"
 									svg={GoogleSvg}
 									onPress={signInWithGoogle}
 								/>
-								{Platform.OS === 'ios' &&
-									<SigninSocialButton
-										title="Login Apple"
-										svg={AppleSvg}
-										onPress={signInWithApple}
-									/>
-								}
+
+								<SigninSocialButton
+									title="Login Apple"
+									svg={GitHubSvg}
+									onPress={(signInWithApple)}
+								/>
+
 						</WrapperFooter>
 					</Content>
-					<Footer>
-
-					</Footer>
 				</Container>
-			</TouchableWithoutFeedback>
+			{/* </TouchableWithoutFeedback> */}
 		</KeyboardAvoidingView>
 
 	)

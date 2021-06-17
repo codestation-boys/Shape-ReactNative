@@ -4,6 +4,7 @@ import { RectButton } from 'react-native-gesture-handler';
 
 interface ButtonProps {
 	color?: string;
+	actived?: boolean;
 }
 
 interface TitleProps {
@@ -16,7 +17,7 @@ export const Container = styled(RectButton)<ButtonProps>`
 	justify-content: center;
 	background-color: ${({ color, theme }) => color ? color : theme.colors.main};
 	border-width:1px;
-	border-color: ${({ theme }) => theme.colors.border_button};
+	border-color: ${({ theme, actived }) =>actived === true ? theme.colors.main : theme.colors.border_button};
 	margin-bottom: 8px;
 	border-radius: 5px;
 	padding: ${RFValue(16)}px;

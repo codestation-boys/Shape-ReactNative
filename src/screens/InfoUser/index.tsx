@@ -4,7 +4,8 @@ import { useTheme } from 'styled-components';
 import {
 	KeyboardAvoidingView,
 	TouchableWithoutFeedback ,
-	Keyboard
+	Keyboard,
+	Platform
 } from 'react-native';
 
 import { Input } from '../../components/Input';
@@ -43,10 +44,13 @@ export function InfoUser(){
 	}
 
 	return (
-		<KeyboardAvoidingView behavior="padding" enabled >
+		<KeyboardAvoidingView behavior="padding" enabled={Platform.OS ==='ios' ? true : false} >
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 				<Container>
-					<Header />
+					<Header
+						internal
+						color={theme.colors.dark}
+					 />
 					<Content>
 						<TitleContent>
 							Agora é só informar os dados complementares para iniciar.

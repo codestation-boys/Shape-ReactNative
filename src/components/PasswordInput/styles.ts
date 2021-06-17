@@ -9,13 +9,13 @@ interface ContainerProps {
 
 export const Container = styled.View<ContainerProps>`
 	flex-direction: row;
-
+	border-radius: 4px;
 	${({isFocused, theme}) => isFocused && css`
-		border-bottom-width: 2px;
-		border-bottom-color: ${({theme}) => theme.colors.main};
+		border-width: 2px;
+		border-color: ${({theme}) => theme.colors.main};
 	`}
 
-	margin-bottom: 8px;
+	margin-bottom: 12px;
 `;
 
 export const IconContainer = styled.View`
@@ -24,15 +24,13 @@ export const IconContainer = styled.View`
 	justify-content: center;
 	align-items: center;
 
-	margin-right: 2px;
-
-	background-color: ${({ theme }) => theme.colors.background};
+	background-color: ${({ theme }) => theme.colors.detail};
 
 `;
 export const InputText = styled(TextInput)`
 	flex:1;
-	background-color: ${({ theme }) => theme.colors.background};
-	color: ${({ theme }) => theme.colors.shape};
+	background-color: ${({ theme }) => theme.colors.detail};
+	color: ${({ theme }) => theme.colors.text_light};
 	font-family: ${({ theme }) => theme.fonts.medium};
 	font-size: ${RFValue(15)}px;
 	padding :0 23px;

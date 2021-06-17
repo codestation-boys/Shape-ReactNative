@@ -3,11 +3,13 @@ import { RectButton } from 'react-native-gesture-handler';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 export const Button = styled(RectButton)`
-	height: ${RFValue(56)}px;
-	background-color: ${({ theme }) => theme.colors.shape};
+	height: ${RFValue(48)}px;
+	background-color: ${({ theme }) => theme.colors.text_light};
 	border-radius: 5px;
 	align-items: center;
+	justify-content: center;
 	flex-direction: row;
+	width: 96px;
 
 `;
 export const ImageContainer = styled.View`

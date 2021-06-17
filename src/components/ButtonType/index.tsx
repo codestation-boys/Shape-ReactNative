@@ -33,7 +33,8 @@ export function ButtonType({
 			{...rest}
 			color={color ? color : theme.colors.main}
 			onPress={onPress}
-			style={{opacity: (enabled === false || loading === true) ? .5 : 1}}
+			actived={enabled}
+			style={{opacity: (enabled === false || loading === true) ? .5 : 1 }}
 		>
 			{loading ?
 				<ActivityIndicator color={theme.colors.shape} size="small" />

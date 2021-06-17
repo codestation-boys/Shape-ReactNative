@@ -22,11 +22,16 @@ import {
 	Form,
 	TitleContent,
 	Footer,
-	WrapperFooter
+	WrapperFooter,
+	BackgroundImage,
+	TitleFooter,
+	ButtonCadastrar
 } from './styles';
 
 import AppleSvg from '../../assets/apple_icon.svg';
+import GitHubSvg from '../../assets/github.svg';
 import GoogleSvg from '../../assets/google_icon.svg';
+import Background from '../../assets/bg-login.png';
 
 
 export function SignIn(){
@@ -46,9 +51,10 @@ export function SignIn(){
 		navigation.navigate('SignUp');
 	}
 	return (
-		<KeyboardAvoidingView behavior="padding" enabled >
+		<KeyboardAvoidingView behavior="padding" enabled={Platform.OS==='ios' ? true : false} >
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 				<Container>
+					<BackgroundImage source={Background} resizeMode="cover"/>
 					<Header />
 					<Content>
 						<TitleContent>
@@ -77,28 +83,34 @@ export function SignIn(){
 								loading={sendRequest}
 							/>
 							<WrapperFooter>
-								<Button
-									title=""
-									color={theme.colors.shape}
-									onPress={handleSignUp}
-									enabled={true}
-									loading={false}
-									iconName="plus-box"
-								/>
+
 								<SigninSocialButton
 									title="Google"
 									svg={GoogleSvg}
 									onPress={signInWithGoogle}
 								/>
-								{Platform.OS === 'ios' &&
-									<SigninSocialButton
-										title="Apple"
-										svg={AppleSvg}
-										onPress={signInWithApple}
-									/>
-								}
+
+								<SigninSocialButton
+									title="GitHub"
+									svg={GitHubSvg}
+									onPress={signInWithApple}
+								/>
+
 							</WrapperFooter>
 						</Form>
+						<ButtonCadastrar onPress={handleSignUp}>
+							<TitleFooter>
+								Não tem uma conta? Fazer cadastro
+							</TitleFooter>
+						</ButtonCadastrar>
+						{/* <Button
+							title=""
+							color={theme.colors.shape}
+							onPress={handleSignUp}
+							enabled={true}
+							loading={false}
+							iconName="plus-box"
+						/> */}
 					</Content>
 					<Footer>
 

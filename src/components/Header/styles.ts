@@ -1,15 +1,24 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import { RFValue } from 'react-native-responsive-fontsize';
 
-export const Container = styled.View`
-	padding-top: ${getStatusBarHeight() + 15}px;
+interface ContainerProps {
+	color? :string;
+	internal?:boolean;
+}
+
+export const Container = styled.View<ContainerProps>`
+	padding-top: ${getStatusBarHeight() + 40}px;
+
 	width: 100%;
-	height: 120px;
 	flex-direction: row;
 	text-align: center;
 	justify-content: center;
-	background-color: ${({ theme }) => theme.colors.background};
+	background-color: ${({ color }) =>  color ? color : 'transparent'};
+	${({internal}) => internal && css`
+		box-shadow: 2px 1px black;
+		padding-top: ${getStatusBarHeight() + 20}px;
+	`}
 `;
 export const Title = styled.Text`
 	font-size: ${RFValue(20)}px;
