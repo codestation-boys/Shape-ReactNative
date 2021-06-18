@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useTheme } from 'styled-components';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../hooks/auth';
+import * as Yup from 'yup';
 
 import {
 	KeyboardAvoidingView,
-	TouchableWithoutFeedback ,
-	Keyboard,
-	Platform
+	Platform,
+	Alert
 } from 'react-native';
 
 import { Input } from '../../components/Input';
@@ -31,6 +31,7 @@ import AppleSvg from '../../assets/apple_icon.svg';
 import GitHubSvg from '../../assets/github.svg';
 import GoogleSvg from '../../assets/google_icon.svg';
 import Background from '../../assets/bg-login.png';
+import api from '../../services/api';
 
 
 
@@ -40,23 +41,71 @@ export function SignUp(){
 	const [ sendRequest, setSendRequest ] = useState(false);
 	const [ password, setPassword ] = useState('');
 	const [ passwordC, setPasswordC ] = useState('');
-	const [ birthDate, setBirthDate] = useState('');
-	const [ genero, setGenero ] = useState<'feminino' | 'masculino'>('masculino');
+	const [ birthDate, setBirthDate] = useState('2021-06-15T16:51:15.837Z');
+	const [ gender, setGender ] = useState<'female' | 'male'>('male');
 
 	const navigation = useNavigation();
 	const { signInWithGoogle, signInWithApple } = useAuth();
 
-	function handleAlterGenero(genero: 'feminino' | 'masculino'){
-		setGenero(genero);
+	function handleAlterGenero(genero: 'female' | 'male'){
+		setGender(genero);
 	}
 
 	const theme = useTheme();
-	async function handleSignin(){
-		setSendRequest(true);
 
-		setSendRequest(false);
-	}
-	function handleSignUp(){
+	async function handleSignUp(){
+		setSendRequest(true);
+		if(password !== passwordC){
+			return Alert.alert('Ops', 'As senhas precisam ser idênticas');
+		}
+		try {
+			const schema = Yup.object().shape({
+				email: Yup.string()
+					.required('E-mail obrigatório!')
+					.email('Digite um e-mail válido!'),
+				password: Yup.string()
+					.required('A senha é obrigatória!')
+
+			});
+			await schema.validate({ email, password});
+			let data = {
+				name,
+				email,
+				password,
+				gender,
+				date_birth: birthDate
+			}
+			await api.post('/accounts',data)
+			.then(() => {
+				setSendRequest(false);
+				Alert.alert(
+					"Conta Criada !",
+					"Faça login para iniciar!",
+					[
+						{
+							text: "Entendi !",
+							onPress: handleSignIn,
+							style: "default"
+						}
+					]
+					);
+			})
+			.catch((response) => {
+				Alert.alert('Opa', 'Não foi possivel cadastrar');
+				setSendRequest(false);
+			});
+		} catch (error) {
+			if(error instanceof Yup.ValidationError){
+				setSendRequest(false);
+				Alert.alert("Ops", error.message);
+			}else{
+				Alert.alert(
+					"Erro na autenticação",
+					"Ocorreu um erro ao fazer login, verifique as credenciais"
+				);
+			}
+			setSendRequest(false);
+		}
 
 	}
 	function handleSignIn(){
@@ -64,7 +113,6 @@ export function SignUp(){
 	}
 	return (
 		<KeyboardAvoidingView behavior="position" enabled={Platform.OS==='ios' ? true : false}  >
-			{/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
 				<Container>
 				<BackgroundImage source={Background} resizeMode="cover"/>
 					<Content>
@@ -101,15 +149,15 @@ export function SignUp(){
 							<WrapperButtons>
 								<ButtonType
 									title="Masculino"
-									onPress={() => handleAlterGenero('masculino')}
+									onPress={() => handleAlterGenero('male')}
 									color={theme.colors.button_background}
-									enabled={genero === 'masculino'}
+									enabled={gender === 'male'}
 								/>
 								<ButtonType
 									title="Feminino"
-									onPress={() => handleAlterGenero('feminino')}
+									onPress={() => handleAlterGenero('female')}
 									color={theme.colors.button_background}
-									enabled={genero === 'feminino'}
+									enabled={gender === 'female'}
 								/>
 							</WrapperButtons>
 							<PasswordInput
@@ -126,7 +174,7 @@ export function SignUp(){
 							/>
 							<Button
 								title="Fazer cadastro"
-								onPress={handleSignin}
+								onPress={handleSignUp}
 								enabled={!sendRequest}
 								loading={sendRequest}
 							/>
@@ -140,7 +188,7 @@ export function SignUp(){
 									loading={false}
 									iconName="chevron-double-left"
 									light
-								/> */}
+								/>
 								<SigninSocialButton
 									title="Login Google"
 									svg={GoogleSvg}
@@ -152,11 +200,10 @@ export function SignUp(){
 									svg={GitHubSvg}
 									onPress={(signInWithApple)}
 								/>
-
+								*/}
 						</WrapperFooter>
 					</Content>
 				</Container>
-			{/* </TouchableWithoutFeedback> */}
 		</KeyboardAvoidingView>
 
 	)

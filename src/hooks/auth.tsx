@@ -4,6 +4,9 @@ import * as Google from 'expo-google-app-auth';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserDTO } from '../dtos/UserDTO';
+import api from '../services/api';
+import base64 from 'react-native-base64'
+import { Alert } from 'react-native';
 
 export const AuthContext = createContext({} as IAuthContextData);
 
@@ -11,12 +14,17 @@ interface AuthProviderProps {
 	children : ReactNode;
 }
 
+interface SignInCredentials {
+	email: string;
+	password: string;
+}
 
 interface IAuthContextData {
 	user: UserDTO;
-	signInWithGoogle(): Promise<void>,
-	signInWithApple(): Promise<void>,
-	sigOut(): Promise<void>,
+	signInWithGoogle(): Promise<void>;
+	signInWithApple(): Promise<void>;
+	sigOut(): Promise<void>;
+	signIn: (credentials: SignInCredentials) => Promise<void>;
 	userStorageLoading: boolean;
 }
 
@@ -26,6 +34,49 @@ function AuthProvider({ children, ...rest } : AuthProviderProps) {
 	const [ userStorageLoading, setUserStorageLoading ] = useState(true);
 	const dataKey = '@gofinacen:user';
 
+	async function signIn({ email, password }: SignInCredentials){
+
+		try {
+			let acess_token = base64.encode(`${email}:${password}`);
+			api.defaults.headers.authorization = `Basic ${acess_token}`;
+
+			api.post('/accounts/login').then(async (response) => {
+				const {access_token, refresh_token,  user_data} = response.data;
+				const newUser = { ...user_data, access_token, refresh_token } as UserDTO;
+				api.defaults.headers.authorization = `Bearer ${access_token}`;
+				setUser(newUser);
+				await AsyncStorage.setItem(dataKey, JSON.stringify(newUser));
+			}).catch((error) => {
+				Alert.alert(
+					"Erro na autenticação",
+					"Ocorreu um erro ao fazer login, verifique as credenciais"
+				);
+			});
+
+		} catch (error) {
+
+			throw new Error(error);
+		}
+
+	}
+	async function refreshToken(){
+
+		try {
+			api.defaults.headers.authorization = ``;
+			const response = await api.post('/accounts/refresh-token', {
+				refresh_token: user.refresh_token
+			});
+
+			const {access_token, refresh_token,  user_data} = response.data;
+			const newUser = { ...user_data, access_token, refresh_token } as UserDTO;
+			api.defaults.headers.authorization = `Bearer ${access_token}`;
+			setUser(newUser);
+			await AsyncStorage.setItem(dataKey, JSON.stringify(newUser));
+		} catch (error) {
+			throw new Error(error);
+		}
+
+	}
 	async function signInWithGoogle(){
 		try {
 			const result = await Google.logInAsync({
@@ -93,10 +144,14 @@ function AuthProvider({ children, ...rest } : AuthProviderProps) {
 			if(userStoraged){
 				const userLogged = JSON.parse(userStoraged) as UserDTO;
 				setUser(userLogged);
+				if(userLogged.access_token && userLogged.access_token !== ''){
+					api.defaults.headers.authorization = `Bearer ${userLogged.access_token}`;
+				}
 			}
 			setUserStorageLoading(false);
 		}
 		getUserAsync();
+
 	},[]);
 	return(
 		<AuthContext.Provider value={{
@@ -104,6 +159,7 @@ function AuthProvider({ children, ...rest } : AuthProviderProps) {
 			signInWithGoogle,
 			signInWithApple,
 			sigOut,
+			signIn,
 			userStorageLoading
 			}} >
 			{ children }

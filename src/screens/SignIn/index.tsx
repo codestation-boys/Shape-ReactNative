@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useTheme } from 'styled-components';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../hooks/auth';
+import * as Yup from 'yup';
 
 import {
 	KeyboardAvoidingView,
 	TouchableWithoutFeedback ,
 	Keyboard,
-	Platform
+	Platform,
+	Alert
 } from 'react-native';
 
 import { Input } from '../../components/Input';
@@ -39,12 +41,28 @@ export function SignIn(){
 	const [ sendRequest, setSendRequest ] = useState(false);
 	const [ password, setPassword ] = useState('');
 
-	const { signInWithGoogle, signInWithApple } = useAuth();
+	const { signInWithGoogle, signInWithApple, signIn } = useAuth();
 	const navigation = useNavigation();
 	const theme = useTheme();
 	async function handleSignin(){
 		setSendRequest(true);
+		try {
+			const schema = Yup.object().shape({
+				password: Yup.string()
+					.required('A senha é obrigatória!'),
+				email: Yup.string()
+					.required('E-mail obrigatório!')
+					.email('Digite um e-mail válido!'),
 
+			});
+			await schema.validate({ email, password});
+			signIn({email, password});
+
+		} catch (error) {
+			if(error instanceof Yup.ValidationError){
+				Alert.alert("Ops", error.message);
+			}
+		}
 		setSendRequest(false);
 	}
 	function handleSignUp(){

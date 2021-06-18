@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components/native';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
-import { RFValue } from 'react-native-responsive-fontsize';
+import { BorderlessButton } from 'react-native-gesture-handler';
 
 interface ContainerProps {
 	color? :string;
@@ -20,8 +20,15 @@ export const Container = styled.View<ContainerProps>`
 		padding-top: ${getStatusBarHeight() + 20}px;
 	`}
 `;
-export const Title = styled.Text`
-	font-size: ${RFValue(20)}px;
-	color: ${({ theme }) => theme.colors.main};
-	font-family: ${({ theme }) => theme.fonts.bold};
+export const Empty = styled.View``;
+
+export const SingOut = styled(BorderlessButton)`
+`;
+
+export const ContainerInternal = styled.View`
+	padding: 0 24px;
+	width: 100%;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
 `;

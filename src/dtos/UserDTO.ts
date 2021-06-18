@@ -3,6 +3,8 @@ export interface UserDTO {
 	name: string;
 	email: string;
 	gender: string;
-	date_birth: string;
+	date_birth?: string;
 	token?: string;
+	refresh_token?: string;
+	access_token?: string;
   }

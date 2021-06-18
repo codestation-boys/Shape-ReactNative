@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useTheme } from 'styled-components';
+import { useAuth } from '../../hooks/auth';
+import { useNavigation } from '@react-navigation/native';
 
 import {
 	KeyboardAvoidingView,
@@ -10,7 +12,6 @@ import {
 
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
-import { ButtonType } from '../../components/ButtonType';
 import { Header } from '../../components/Header';
 
 import {
@@ -18,29 +19,58 @@ import {
 	Content,
 	Form,
 	TitleContent,
-	Footer,
-	WrapperFooter,
 
 } from './styles';
-import { useRef } from 'react';
+import api from '../../services/api';
+import { Alert } from 'react-native';
+
+
 
 export function InfoUser(){
-	const user = {
-		gender: 'male'
-	};
-	const [ weight, setWeight ] = useState('');
+
+	const [ weight, setWeight ] = useState(0);
 	const [ sendRequest, setSendRequest ] = useState(false);
-	const [ waist, setWaist ] = useState('');
-	const [ neck, setNeck ] = useState('');
-	const [ height, setHeight ] = useState('');
+	const [ waist, setWaist ] = useState(5);
+	const [ neck, setNeck ] = useState(0);
+	const [ height, setHeight ] = useState(0);
+
 	const theme = useTheme();
-	async function handleSignin(){
-		setSendRequest(true);
-
-		setSendRequest(false);
+	const navigation = useNavigation();
+	const { user } = useAuth();
+	function handleGoToDashboard() {
+		navigation.navigate('Dashboard');
 	}
-	function handleSignUp(){
+	async function handleSubmit(){
 
+		try {
+			setSendRequest(true);
+			let data = {
+				height,
+				weight,
+				waist,
+				neck
+			};
+			let data_teste = {
+				height: 1.88, // m
+				weight: 75.5, // kg
+				waist: 78,    // cm
+				neck: 37      // cm
+			  }
+			  console.log(data, data_teste);
+			  await api.post('/statistics/measures', data).then((response) => {
+				if(response.status === 201){
+					handleGoToDashboard();
+				}
+				setSendRequest(false);
+			}).catch((error) => {
+				console.log(error);
+				Alert.alert('Ops', 'Houve algum erro ao salvar os dados, tente novamente mais tarde.');
+				setSendRequest(false);
+			});
+
+		} catch (error) {
+			setSendRequest(false);
+		}
 	}
 
 	return (
@@ -53,54 +83,49 @@ export function InfoUser(){
 					 />
 					<Content>
 						<TitleContent>
-							Agora é só informar os dados complementares para iniciar.
+							Digite suas emdidas
 						</TitleContent>
 						<Form>
 							<Input
 								iconName="code"
 								placeholder="Altura"
 								keyboardType="numeric"
-								onChangeText={setHeight}
-								value={height}
+								onChangeText={(value) => setHeight(Number(value))}
+								value={String(height)}
 							/>
 							<Input
 								iconName="more-horizontal"
 								placeholder="Peso"
 								keyboardType="numeric"
-								onChangeText={setWeight}
-								value={weight}
+								onChangeText={(value) => setWeight(Number(value))}
+								value={String(weight)}
 							/>
-							{user.gender !== 'male' ?
-								<Input
-									iconName="code"
-									placeholder="Cintura"
-									keyboardType="numeric"
-									onChangeText={setWaist}
-									value={waist}
-								/>
-							:null}
+
+							<Input
+								iconName="code"
+								placeholder="Cintura"
+								keyboardType="numeric"
+								onChangeText={(value) => setWaist(Number(value))}
+								value={String(waist)}
+							/>
+
 							<Input
 								iconName="code"
 								placeholder="Pescoço"
 								keyboardType="numeric"
-								onChangeText={setNeck}
-								value={neck}
+								onChangeText={(value) => setNeck(Number(value))}
+								value={String(neck)}
 							/>
 
 							<Button
 								title="Salvar"
-								onPress={handleSignin}
+								onPress={handleSubmit}
 								enabled={!sendRequest}
 								loading={sendRequest}
 							/>
 
 						</Form>
 					</Content>
-					<Footer>
-						<WrapperFooter>
-
-							</WrapperFooter>
-					</Footer>
 				</Container>
 			</TouchableWithoutFeedback>
 		</KeyboardAvoidingView>
