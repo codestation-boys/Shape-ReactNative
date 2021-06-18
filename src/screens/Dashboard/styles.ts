@@ -17,23 +17,10 @@ export const TitleContent = styled.Text`
 export const Content = styled.View`
 	justify-content: space-between;
 	margin: 24px;
-	padding: 24px 24px;
 
 `;
 export const Form = styled.View`
 
-`;
-
-export const Footer = styled.View`
-	padding: 24px 24px;
-	background-color: ${({ theme }) => theme.colors.background};
-
-`;
-
-export const TitleFooter = styled.Text`
-	font-size: ${RFValue(15)}px;
-	color: ${({ theme }) => theme.colors.shape};
-	font-family: ${({ theme }) => theme.fonts.medium};
 `;
 
 export const WrapperFooter = styled.View`

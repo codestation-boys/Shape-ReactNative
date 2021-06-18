@@ -50,14 +50,7 @@ export function InfoUser(){
 				waist,
 				neck
 			};
-			let data_teste = {
-				height: 1.88, // m
-				weight: 75.5, // kg
-				waist: 78,    // cm
-				neck: 37      // cm
-			  }
-			  console.log(data, data_teste);
-			  await api.post('/statistics/measures', data).then((response) => {
+			await api.post('/statistics/measures', data).then((response) => {
 				if(response.status === 201){
 					handleGoToDashboard();
 				}

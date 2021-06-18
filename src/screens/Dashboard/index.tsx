@@ -15,8 +15,6 @@ import { CalculateDTO } from '../../dtos/CalculatesDTO';
 import {
 	Container,
 	Content,
-	Footer,
-	WrapperFooter,
 	HeaderContent,
 	TitleHistorico,
 	ButtonAddMedidas,
@@ -123,11 +121,6 @@ export function Dashboard(){
 						</ResumeData>
 					}
 			</Content>
-			<Footer>
-				<WrapperFooter>
-
-				</WrapperFooter>
-			</Footer>
 		</Container>
 	)
 

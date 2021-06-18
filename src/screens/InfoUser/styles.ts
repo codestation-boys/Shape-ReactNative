@@ -17,6 +17,7 @@ export const Content = styled.View`
 	margin: 64px 24px 24px 24px;
 	padding: 24px 24px;
 	background-color: ${({ theme }) => theme.colors.shape};
+	border-radius: 12px;
 
 `;
 export const Form = styled.View`
