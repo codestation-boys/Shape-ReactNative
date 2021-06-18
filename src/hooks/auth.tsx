@@ -24,6 +24,7 @@ interface IAuthContextData {
 	signInWithGoogle(): Promise<void>;
 	signInWithApple(): Promise<void>;
 	sigOut(): Promise<void>;
+	refreshToken(): Promise<void>;
 	signIn: (credentials: SignInCredentials) => Promise<void>;
 	userStorageLoading: boolean;
 }
@@ -151,7 +152,6 @@ function AuthProvider({ children, ...rest } : AuthProviderProps) {
 			setUserStorageLoading(false);
 		}
 		getUserAsync();
-
 	},[]);
 	return(
 		<AuthContext.Provider value={{
@@ -160,6 +160,7 @@ function AuthProvider({ children, ...rest } : AuthProviderProps) {
 			signInWithApple,
 			sigOut,
 			signIn,
+			refreshToken,
 			userStorageLoading
 			}} >
 			{ children }

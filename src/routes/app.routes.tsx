@@ -21,7 +21,7 @@ export function AppRoutes() {
 				inactiveTintColor: theme.colors.text_light,
 				labelPosition: 'beside-icon',
 				style: {
-					paddingVertical: Platform.OS === 'ios' ? 20 : 0,
+					paddingBottom: Platform.OS === 'ios' ? 20 : 0,
 					height: 72,
 					backgroundColor: theme.colors.success,
 					borderTopColor: theme.colors.success
@@ -50,7 +50,7 @@ export function AppRoutes() {
 				options={{
 					tabBarIcon:(({ size, color }) => (
 						<MaterialCommunityIcons
-							name="map-search-outline"
+							name="map-marker-distance"
 							size={size}
 							color={color}
 						/>

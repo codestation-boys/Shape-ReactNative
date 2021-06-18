@@ -2,8 +2,8 @@ import styled from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { RectButton } from 'react-native-gesture-handler';
 
-export const Container = styled.ScrollView`
-
+export const Container = styled.View`
+	height: 100%;
 	background-color: ${({ theme }) => theme.colors.background};
 
 `;

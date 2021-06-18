@@ -3,9 +3,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { RectButton } from 'react-native-gesture-handler';
 
 export const Container = styled.ScrollView`
-
 	background-color: ${({ theme }) => theme.colors.background};
-
 `;
 
 export const TitleContent = styled.Text`
@@ -80,5 +78,22 @@ export const LessMass = styled.Text`
 	line-height: 21px;
 	border-left-width: 2px;
 	border-color: ${({ theme }) => theme.colors.text_light};
-	padding-left: 5px;
+	padding-left: 15px;
+`;
+
+
+export const ContentCharts = styled.View`
+
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+`;
+export const TitleChart = styled.Text`
+	margin-top: 24px;
+	width: 100%;
+	font-size: ${RFValue(18)}px;
+	color: ${({ theme }) => theme.colors.text_light};
+	font-family: ${({ theme }) => theme.fonts.bold};
+	text-align: left;
+	line-height: 21px;
 `;
