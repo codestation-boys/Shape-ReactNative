@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTheme } from 'styled-components';
 import { useNavigation } from '@react-navigation/native';
-import { useAuth } from '../../hooks/auth';
+
 import * as Yup from 'yup';
 
 import {
@@ -14,24 +14,20 @@ import { Input } from '../../components/Input';
 import { PasswordInput } from '../../components/PasswordInput';
 import { ButtonType } from '../../components/ButtonType';
 import { Button } from '../../components/Button';
-import { SigninSocialButton } from '../../components/SigninSocialButton';
 
 import {
 	Container,
 	Content,
 	Form,
 	TitleContent,
-	Footer,
-	WrapperFooter,
 	WrapperButtons,
 	BackgroundImage
 } from './styles';
 
-import AppleSvg from '../../assets/apple_icon.svg';
-import GitHubSvg from '../../assets/github.svg';
-import GoogleSvg from '../../assets/google_icon.svg';
+
 import Background from '../../assets/bg-login.png';
 import api from '../../services/api';
+import { InputDate } from '../../components/InputDate';
 
 
 
@@ -41,17 +37,14 @@ export function SignUp(){
 	const [ sendRequest, setSendRequest ] = useState(false);
 	const [ password, setPassword ] = useState('');
 	const [ passwordC, setPasswordC ] = useState('');
-	const [ birthDate, setBirthDate] = useState('2021-06-15T16:51:15.837Z');
+	const [ birthDate, setBirthDate] = useState<Date | undefined>(new Date());
 	const [ gender, setGender ] = useState<'female' | 'male'>('male');
 
 	const navigation = useNavigation();
-	const { signInWithGoogle, signInWithApple } = useAuth();
-
+	const theme = useTheme();
 	function handleAlterGenero(genero: 'female' | 'male'){
 		setGender(genero);
 	}
-
-	const theme = useTheme();
 
 	async function handleSignUp(){
 		setSendRequest(true);
@@ -101,7 +94,7 @@ export function SignUp(){
 			}else{
 				Alert.alert(
 					"Erro na autenticação",
-					"Ocorreu um erro ao fazer login, verifique as credenciais"
+					"Ocorreu algum erro, verifique seus dados e tente novamente."
 				);
 			}
 			setSendRequest(false);
@@ -111,10 +104,15 @@ export function SignUp(){
 	function handleSignIn(){
 		navigation.goBack();
 	}
+	function handleChangeTime(date: Date | undefined) {
+		if(date){
+			setBirthDate(date);
+		}
+	}
 	return (
-		<KeyboardAvoidingView behavior="position" enabled={Platform.OS==='ios' ? true : false}  >
+		<KeyboardAvoidingView behavior="padding" enabled={Platform.OS==='ios' ? true : false}  >
 				<Container>
-				<BackgroundImage source={Background} resizeMode="cover"/>
+					<BackgroundImage source={Background} resizeMode="cover"/>
 					<Content>
 						<TitleContent>
 							Faça seu cadastro para começar!
@@ -138,14 +136,11 @@ export function SignUp(){
 								onChangeText={setEmail}
 								value={email}
 							/>
-							<Input
+							<InputDate
 								iconName="calendar"
-								placeholder="Data de nascimento"
-								keyboardType="numeric"
-								autoCorrect={false}
-								onChangeText={setBirthDate}
-								value={birthDate}
+								setValue={handleChangeTime}
 							/>
+
 							<WrapperButtons>
 								<ButtonType
 									title="Masculino"
@@ -179,29 +174,6 @@ export function SignUp(){
 								loading={sendRequest}
 							/>
 						</Form>
-						<WrapperFooter>
-								{/* <Button
-									title=""
-									color={theme.colors.text_light}
-									onPress={handleSignIn}
-									enabled={true}
-									loading={false}
-									iconName="chevron-double-left"
-									light
-								/>
-								<SigninSocialButton
-									title="Login Google"
-									svg={GoogleSvg}
-									onPress={signInWithGoogle}
-								/>
-
-								<SigninSocialButton
-									title="Login Apple"
-									svg={GitHubSvg}
-									onPress={(signInWithApple)}
-								/>
-								*/}
-						</WrapperFooter>
 					</Content>
 				</Container>
 		</KeyboardAvoidingView>

@@ -11,6 +11,7 @@ export interface MeasuresTDO {
 		weight: number;
 		waist: number;
 		neck: number;
+		hip?: number;
 		created_at: string;
 	}[]
 }

@@ -6,8 +6,6 @@ import * as Yup from 'yup';
 
 import {
 	KeyboardAvoidingView,
-	TouchableWithoutFeedback ,
-	Keyboard,
 	Platform,
 	Alert
 } from 'react-native';
@@ -70,7 +68,6 @@ export function SignIn(){
 	}
 	return (
 		<KeyboardAvoidingView behavior="padding" enabled={Platform.OS==='ios' ? true : false} >
-			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 				<Container>
 					<BackgroundImage source={Background} resizeMode="cover"/>
 					<Header />
@@ -134,7 +131,6 @@ export function SignIn(){
 
 					</Footer>
 				</Container>
-			</TouchableWithoutFeedback>
 		</KeyboardAvoidingView>
 
 	)

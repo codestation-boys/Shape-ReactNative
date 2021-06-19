@@ -28,7 +28,10 @@ export default {
 		main_light:			'#de3d3f',
 		detail_light:		'#956099',
 		background_light: 	'#203499',
-		border_button:		'#526491'
+		border_button:		'#526491',
+
+		chart_primary: 		'#1BC5BD',
+		chart_secondary:	'#de3d3f'
 	},
 	fonts: {
 		light: 	'Roboto_300Light',

@@ -4,7 +4,8 @@ import { useTheme } from 'styled-components';
 import { useAuth } from '../../hooks/auth';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useNavigation } from '@react-navigation/native';
-import { VictoryPie, VictoryArea } from "victory-native";
+
+import { format } from 'date-fns';
 
 import { Header } from '../../components/Header';
 import { MeasuresTDO } from '../../dtos/MeasuresDTO';
@@ -20,12 +21,19 @@ import {
 	FeatMass,
 	LessMass,
 	ContentCharts,
-	TitleChart
+	Empty,
+	TitleEmpty
 } from './styles';
 import api from '../../services/api';
+import { Chart } from '../../components/Chart';
+import { ChartGroup } from '../../components/ChartGroup';
 interface indesCalcProps{
 	lastIndex: number;
 	hasReg: boolean;
+}
+interface GraficosProps {
+	date: string;
+	value: string;
 }
 interface totalBodyPros
 {
@@ -46,6 +54,9 @@ export function Dashboard(){
 	const theme = useTheme();
 	const navigation = useNavigation();
 	const [totalBody, setTotalBody] = useState<totalBodyPros[]>([]);
+	const [dataIMC, setDataIMC] = useState<GraficosProps[]>([]);
+	const [dataBF, setDataBF] = useState<GraficosProps[]>([]);
+	const [dataWT, setDataWT] = useState<GraficosProps[]>([]);
 
 	async function getInfoUser() {
 
@@ -70,6 +81,9 @@ export function Dashboard(){
 	function handleGoInsertMeasures() {
 		navigation.navigate('InfoUser');
 	}
+	function handleGoFind(){
+		navigation.navigate('Parceiros');
+	}
 	useEffect(() => {
 		getInfoUser();
 	},[user])
@@ -78,47 +92,37 @@ export function Dashboard(){
 			let lastIndex = calculate.historicCalculations.length - 1;
 			let hasReg = true;
 			setIndexes({lastIndex, hasReg});
+			let tempIMC = [] as GraficosProps[];
+			let tempBF = [] as GraficosProps[];
+			calculate.historicCalculations.map((data) => {
+
+				tempIMC.push({
+					date: format(new Date(data.created_at), 'MM'),
+					value: `${data.body_mass_index}`
+				});
+				tempBF.push({
+					date: format(new Date(data.created_at), 'MM'),
+					value: `${data.fat_mass}`
+				});
+			});
+
+			setDataIMC(tempIMC);
+			setDataBF(tempBF);
 		}
 	}, [calculate]);
 	useEffect(() => {
-		if(indexes.lastIndex){
-			let lastData = calculate.historicCalculations[indexes.lastIndex];
-			// console.log(lastData);
-			setTotalBody([
-				{
-					key: '1',
-					color: 'yellow',
-					name: 'Gordura Corporal',
-					percent: lastData.body_fat_percentage,
-					percentFormatted: `${lastData.body_fat_percentage}%`,
-					totalFormatted: `${lastData.body_fat_percentage}`,
-					total:`${lastData.body_fat_percentage}`
+		if(measures?.historicMeasures?.length > 0){
+			let tempWT = [] as GraficosProps[];
+			measures.historicMeasures.map((data) => {
+				tempWT.push({
+					date: format(new Date(data.created_at), 'MM'),
+					value: `${data.weight}`
+				});
 
-				},
-				{
-					key: '2',
-					color: 'blue',
-					name: 'Massa Corporal',
-					percent: lastData.body_mass_index,
-					percentFormatted: `${lastData.body_mass_index}%`,
-					totalFormatted: `${lastData.body_mass_index}`,
-					total:`${lastData.body_mass_index}`
-
-				},
-				{
-					key: '3',
-					color: 'green',
-					name: 'body_mass',
-					percent: lastData.lean_mass,
-					percentFormatted: `${lastData.lean_mass}%`,
-					totalFormatted: `${lastData.lean_mass}`,
-					total:`${lastData.lean_mass}`
-
-				}
-			]);
+			});
+			setDataWT(tempWT);
 		}
-
-	}, [indexes]);
+	},[measures]);
 	return (
 
 		<Container>
@@ -142,7 +146,7 @@ export function Dashboard(){
 						/>
 					</ButtonAddMedidas>
 				</HeaderContent>
-					{indexes.hasReg === true &&
+					{indexes.hasReg === true ?
 						<ResumeData>
 							<FeatMass>
 								{`Massa gorda \n ${
@@ -162,31 +166,43 @@ export function Dashboard(){
 									.lean_mass}${calculate.unitsMeasure.lean_mass}`}
 							</LessMass>
 						</ResumeData>
+					:
+						<ResumeData>
+							<Empty
+								onPress={handleGoInsertMeasures}
+							>
+								<TitleEmpty>
+									{`Informe suas medidas aqui`}
+								</TitleEmpty>
+							</Empty>
+						</ResumeData>
 					}
 					<ContentCharts>
-						{totalBody.length > 0 &&
-						<>
-							<TitleChart >
-								Indices corporais
-							</TitleChart>
-							<VictoryPie
-								data={totalBody}
-								x="percentFormatted"
-								y="total"
-								colorScale={totalBody.map(category => category.color)}
-								style={{
-									labels: {
-										fontSize: RFValue(18),
-										fontWeight: 'bold',
-										fill: theme.colors.text
-									},
-								}}
-								labelRadius={70}
-
+						{dataWT.length > 0 &&
+							<Chart
+								titleChart="Histórico Peso"
+								data={dataWT}
 							/>
-						</>
+						}
+						{dataBF.length > 0 && dataIMC.length > 0 ?
+							<ChartGroup
+								titleChart="Histórico IMC X BF"
+								dataPrimary={dataIMC}
+								dataSecondary={dataBF}
+							/>
+						:
+						<ResumeData>
+							<Empty
+								onPress={handleGoFind}
+							>
+								<TitleEmpty>
+									{`Encontrar companheiros de treino`}
+								</TitleEmpty>
+							</Empty>
+						</ResumeData>
 						}
 					</ContentCharts>
+
 			</Content>
 		</Container>
 	)

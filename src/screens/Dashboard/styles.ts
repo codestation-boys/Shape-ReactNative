@@ -81,19 +81,24 @@ export const LessMass = styled.Text`
 	padding-left: 15px;
 `;
 
-
 export const ContentCharts = styled.View`
 
 	width: 100%;
 	justify-content: center;
 	align-items: center;
 `;
-export const TitleChart = styled.Text`
-	margin-top: 24px;
+
+export const Empty = styled.TouchableOpacity`
 	width: 100%;
-	font-size: ${RFValue(18)}px;
+	background-color: ${({ theme }) => theme.colors.shape};
+	padding:15px 10px;
+	border-radius: 12px;
+`;
+
+
+export const TitleEmpty = styled.Text`
+	font-size: ${RFValue(15)}px;
 	color: ${({ theme }) => theme.colors.text_light};
 	font-family: ${({ theme }) => theme.fonts.bold};
-	text-align: left;
-	line-height: 21px;
+	text-align: center;
 `;

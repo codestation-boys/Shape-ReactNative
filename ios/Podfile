@@ -19,4 +19,6 @@ target 'gymstation' do
   #   end
   # end
 
+  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
+
 end

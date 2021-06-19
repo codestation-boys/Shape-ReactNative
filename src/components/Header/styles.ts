@@ -20,13 +20,15 @@ export const Container = styled.View<ContainerProps>`
 		padding-top: ${getStatusBarHeight() + 20}px;
 	`}
 `;
-export const Empty = styled.View``;
+export const Empty = styled.View`
+	width: 60px;
+`;
 
 export const SingOut = styled(BorderlessButton)`
+	width: 60px;
 `;
 
 export const ContainerInternal = styled.View`
-	padding: 0 24px;
 	width: 100%;
 	flex-direction: row;
 	justify-content: space-between;
